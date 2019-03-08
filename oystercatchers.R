@@ -162,3 +162,6 @@ table(OC$Month, OC$FeedingPlot, OC$FeedingType)
 # model without 3-way
 M2 <- update(M1, . ~ . -Month:FeedingPlot:FeedingType)
 summary(M2)
+
+# Display diagnostics for reduced model
+plot(M2)
