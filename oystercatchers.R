@@ -1,4 +1,6 @@
 library(readr)
+
+# Read and summarise raw data ####
 OC <- read_tsv("data/OystercatcherData.txt")
 summary(OC)
 
@@ -8,13 +10,13 @@ OC$FeedingType <- as.factor(OC$FeedingType)
 OC$FeedingPlot <- as.factor(OC$FeedingPlot)
 summary(OC)
 
+# Check broad relationships between the three factors and ShellLength ####
 library(ggplot2)
 p1 <- ggplot() +
   geom_boxplot(data=OC, aes(x = FeedingType, y = ShellLength)) +
   xlab("Feeding type") +
   ylab("Shell length") +
   theme_classic()
-p1
 p2 <- ggplot() +
   geom_boxplot(data=OC, aes(x = Month, y = ShellLength)) +
   xlab("Month") +
@@ -26,7 +28,7 @@ p3 <- ggplot() +
   ylab("Shell length") +
   theme_classic()
 
-# Multiple plot function
+# Multiple plot function ####
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
 # - cols:   Number of columns in layout
@@ -78,6 +80,7 @@ table(OC$Month)
 table(OC$FeedingPlot)
 table(OC$FeedingType)
 
+# Create the overall model and check results ####
 M1 <- lm(ShellLength ~ FeedingType * FeedingPlot * Month,
          data = OC)
 print(summary(M1), digits = 2)
@@ -107,7 +110,7 @@ MyData$se.low <- P1$fit - 1.96 * P1$se.fit
 MyData$se.up  <- P1$fit + 1.96 * P1$se.fit
 print(MyData, digits = 3)
 
-# Visualise the predictions
+# Visualise the predictions with errors ####
 library(magrittr) # pipe operator %>%
 library(dplyr)    # mutate function
 MyData %>%
@@ -118,7 +121,7 @@ MyData %>%
     coord_flip() +
     theme_classic()
 
-# Detailed breakdown of residuals
+# Detailed breakdown of residuals for each factor ####
 p <- ggplot()
 p <- p + xlab("Feeding type") + ylab("Shell length")
 p <- p + theme(text = element_text(size=15)) + theme_bw()
